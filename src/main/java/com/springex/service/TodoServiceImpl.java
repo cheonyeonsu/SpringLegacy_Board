@@ -1,6 +1,8 @@
 package com.springex.service;
 
 import com.springex.domain.TodoVO;
+import com.springex.dto.PageRequestDTO;
+import com.springex.dto.PageResponseDTO;
 import com.springex.dto.TodoDTO;
 import com.springex.mapper.TodoMapper;
 import org.modelmapper.ModelMapper;
@@ -34,14 +36,34 @@ public class TodoServiceImpl implements TodoService{
 
         todoMapper.insert(todoVO);
     }
+
+    //    @Override
+//    public List<TodoDTO> getAll() {
+//        // TodoVO의 리스트를 TodoDTO리스트로 변환하여 반환.
+//        List<TodoDTO> dtoList = todoMapper.selectAll().stream()
+//                .map(vo -> modelMapper.map(vo, TodoDTO.class))
+//                .collect(Collectors.toList());
+//
+//        return dtoList;
+//    }
+
     @Override
-    public List<TodoDTO> getAll() {
-        // TodoVO의 리스트를 TodoDTO리스트로 변환하여 반환.
-        List<TodoDTO> dtoList = todoMapper.selectAll().stream()
+    public PageResponseDTO<TodoDTO> getList(PageRequestDTO pageRequestDTO){
+
+        List<TodoVO> voList = todoMapper.selectList(pageRequestDTO);
+        List<TodoDTO> dtoList = voList.stream()
                 .map(vo -> modelMapper.map(vo, TodoDTO.class))
                 .collect(Collectors.toList());
 
-        return dtoList;
+        int total = todoMapper.getCount(pageRequestDTO);
+
+        PageResponseDTO<TodoDTO> pageResponseDTO = PageResponseDTO.<TodoDTO>withAll()
+                .dtoList(dtoList)
+                .total(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+
+        return pageResponseDTO;
     }
     @Override
     public TodoDTO getOne(Long tno) {
@@ -51,18 +73,14 @@ public class TodoServiceImpl implements TodoService{
 
         return todoDTO;
     }
-
     @Override
-    public void remove(Long tno){
+    public void remove(Long tno) {
         todoMapper.delete(tno);
     }
-
     @Override
     public void modify(TodoDTO todoDTO) {
         TodoVO todoVO = modelMapper.map(todoDTO, TodoVO.class);
 
         todoMapper.update(todoVO);
     }
-
-
 }

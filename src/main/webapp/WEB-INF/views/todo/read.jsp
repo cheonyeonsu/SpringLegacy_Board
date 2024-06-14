@@ -105,7 +105,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script>
     document.querySelector(".btn-primary").addEventListener("click", function(e){
-        self.location = "/todo/modify?tno="+${dto.tno}
+        //벡틱(`)으로 처리하면 변수와 텍스트 모두 처리
+        self.location = `/todo/modify?tno=${dto.tno}&${pageRequestDTO.link}`
     },false)
 
 
@@ -116,7 +117,8 @@
         e.stopPropagation() //이벤트 흐름 방지
 
         //self-> 현재 창의 location. 즉 현재 창의 주소.
-        self.location = "/todo/list";
+        // self.location = "/todo/list"; 단순한 이동
+        self.location = "/todo/list?${pageRequestDTO.link}"; //jsp가 읽어들일 수 있게 변경
     },false)
 </script>
 </body>

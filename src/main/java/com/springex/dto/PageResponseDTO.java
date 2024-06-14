@@ -28,7 +28,7 @@ public class PageResponseDTO<E>{
     // 다음 페이지의 존재 여부
     private boolean next;
 
-    private List<E> dtoList;
+    private List<E> dtoList; //getDtoList()
 
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(PageRequestDTO pageRequestDTO,
@@ -40,7 +40,25 @@ public class PageResponseDTO<E>{
 
         this.total = total;
         this.dtoList = dtoList;
-    }
 
+        //마지막 페이지
+        this.end = (int)(Math.ceil(this.page/10.0)) * 10;
+
+        // 시작페이지
+        this.start = this.end - 9;
+
+        // 데이타를 고려한 마지막 페이지
+        int last = (int)(Math.ceil((total/(double)size)));
+
+        // 마지막 페이지는 last보다 작은경우에는 last로 처리
+        this.end = end > last ? last:end;
+
+        // 이전(prev)값이 있어야 하는경우
+        this.prev = this.start > 1;
+
+        // next값이 있어야 하는 경우
+        this.next = total > this.end * this.size;
+
+    }
 
 }
