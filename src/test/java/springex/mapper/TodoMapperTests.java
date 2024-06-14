@@ -65,4 +65,17 @@ public class TodoMapperTests {
         voList.forEach(vo -> log.info(vo));
     }
 
+    @Test
+    public void testSelectSearch() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .types(new String[]{"t","w"})  //배열로 t,w넣음
+                .build();
+
+        //실제VO에 있는지 확인
+        List<TodoVO> voList = todoMapper.selectList(pageRequestDTO);
+
+        voList.forEach(vo -> log.info(vo));
+    }
 }
